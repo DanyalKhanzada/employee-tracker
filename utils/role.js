@@ -1,36 +1,36 @@
 const db = require('../db/connection');
 const cTable = require('console.table');
 
-//fetches the departments table
-const viewAllDepartments = function () {
-    const sql = 'SELECT * FROM department';
+//fetches the roles table
+const viewAllRoles = function () {
+    const sql = `SELECT role.id, role.title, department.department_name AS 'department', role.salary FROM role
+    LEFT JOIN department ON role.department_id = department.id`;
 
     db.query(sql, (err, results) => {
-      try { 
-        console.log('\n');
-        console.table(results); }
-      catch (err) { console.log("There is something wrong with the database connection:"+ err)}     
+      try { console.log('\n'); console.table(results); }
+      catch (err) { console.log("Something is wrong with the database connection:"+ err)}
     });
 }
 
-//Used to insert new departments
-const addDepartment = function (department_name) {
-    const sql = `INSERT INTO department (department_name) VALUES (?)`;
+//Used to insert new roles
+const addRole = function (title, salary, department_id) {
+    const sql = `INSERT INTO role (title, salary, department_id) VALUES (?,?,?)`;
+    const params = [title, salary, department_id];
   
-    db.query(sql, department_name, (err, results) => {
-      try { console.log('\n'); console.log("Department is added."); }
-      catch (err) { console.log("There is something wrong with the database connection:"+ err)} 
+    db.query(sql, params, (err, results) => {
+      try { console.log('\n'); console.log("Role added."); }
+      catch (err) { console.log("Something is wrong with the database connection:"+ err)}
     });
 }
 
-//removes department by id
-const removeDepartment = function (id) {
-    const sql = `DELETE FROM department WHERE id = ?`;
+//removes role by id
+const removeRole = function (id) {
+    const sql = `DELETE FROM role WHERE id = ?`;
   
     db.query(sql, id, (err, results) => {
-      try { console.log('\n'); console.log("Department is removed."); }
-      catch (err) { console.log("There is something wrong with the database connection:"+ err)}
+      try { console.log('\n'); console.log("Role removed."); }
+      catch (err) { console.log("Something is wrong with the database connection:"+ err)}
     });
 }
 
-module.exports = {viewAllDepartments,addDepartment,removeDepartment};
+module.exports = {viewAllRoles,addRole,removeRole};
